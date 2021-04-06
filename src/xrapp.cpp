@@ -221,6 +221,7 @@ void XRApp::enumViewConfigurations()
  */
 void XRApp::enumViewConfigProps()
 {
+    _viewConfProps = {XR_TYPE_VIEW_CONFIGURATION_PROPERTIES};
     CHK_XR( xrGetViewConfigurationProperties(_instance, _systemID, _viewConfType, &_viewConfProps) );
     std::cout << "FOV mutable: " << _viewConfProps.fovMutable << std::endl;
 }
@@ -235,7 +236,7 @@ void XRApp::enumViewConfigViews()
     CHK_XR(xrEnumerateViewConfigurationViews(_instance, _systemID, _viewConfType, cap_input, &count_output, NULL));
     std::cout << count_output << " view configuration views(s)" << std::endl;
     cap_input = count_output;
-    _viewConfigViews.resize(count_output);
+    _viewConfigViews.resize(count_output, {XR_TYPE_VIEW_CONFIGURATION_VIEW});
     CHK_XR(xrEnumerateViewConfigurationViews(_instance, _systemID, _viewConfType, cap_input, &count_output, _viewConfigViews.data()));
     int cfg_idx = 0;
     for (const XrViewConfigurationView& view_conf_view : _viewConfigViews) {
@@ -605,7 +606,7 @@ void XRApp::beginSession()
 
 void XRApp::frame()
 {
-    XrFrameState frame_state;
+    XrFrameState frame_state{XR_TYPE_FRAME_STATE};
     XrFrameWaitInfo frame_wait_info{ XR_TYPE_FRAME_WAIT_INFO };
     CHK_XR(xrWaitFrame(_session, &frame_wait_info, &frame_state));
 #if 0
