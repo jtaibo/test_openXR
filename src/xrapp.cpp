@@ -256,18 +256,22 @@ void XRApp::enumViewConfigViews()
  */
 void XRApp::createSession()
 {
-    _gfxBinding.type = XR_TYPE_GRAPHICS_BINDING_OPENGL_WIN32_KHR;
+    _gfxBinding = { XR_TYPE_GRAPHICS_BINDING_OPENGL_WIN32_KHR };
     _gfxBinding.next = nullptr;
     _gfxStuff = new GLSystem();
     // to-do: get wxh in systemProps and viewConfigViews
     // Let's suppose that all views (both eyes) have the same dimensions
+#if 0
+    std::cout << "Initializing graphics context with " << _viewConfigViews[0].maxImageRectWidth << "x" << _viewConfigViews[0].maxImageRectHeight<< std::endl;
+    _gfxStuff->initializeDevice(_instance, _systemID, _viewConfigViews[0].maxImageRectWidth, _viewConfigViews[0].maxImageRectHeight);
+#else
+    std::cout << "Initializing graphics context with " << _viewConfigViews[0].recommendedImageRectWidth << "x" << _viewConfigViews[0].recommendedImageRectHeight << std::endl;
     _gfxStuff->initializeDevice(_instance, _systemID, _viewConfigViews[0].recommendedImageRectWidth, _viewConfigViews[0].recommendedImageRectHeight);
+#endif
     _gfxBinding.hDC = _gfxStuff->getHDC();
     _gfxBinding.hGLRC = _gfxStuff->getHGLRC();
 
-    XrSessionCreateInfo session_create_info;
-    memset(&session_create_info, 0, sizeof(session_create_info));
-    session_create_info.type = XR_TYPE_SESSION_CREATE_INFO;
+    XrSessionCreateInfo session_create_info{ XR_TYPE_SESSION_CREATE_INFO };
     session_create_info.systemId = _systemID;
     session_create_info.createFlags = 0;
     session_create_info.next = &_gfxBinding;    // Pointer to Graphics API binding structure

@@ -231,17 +231,14 @@ int64_t GLSystem::getFormat(const std::vector<int64_t>& supported_swapchain_form
         throw("No runtime swapchain format supported for color swapchain");
     }
 
-#if 1
-
+#if 0
     uint32_t fmt = GL_SRGB8_ALPHA8;
     std::cout << "Selected format 0x" << std::hex << fmt << std::dec
         << " " << textureInternalFormatToString(fmt) << std::endl;
-
     return fmt;
 #else
     std::cout << "Selected format 0x" << std::hex << *swapchainFormatIt << std::dec
         << " " << textureInternalFormatToString(*swapchainFormatIt) << std::endl;
-
     return *swapchainFormatIt;
 #endif
 }
